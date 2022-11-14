@@ -1,4 +1,5 @@
 import random
+from typing import Protocol
 
 #-- LEVEL 1
 
@@ -34,6 +35,11 @@ class BadSuperMonster():
     def action(self):
         print("BadSuperMonster in action")
 
+
+class EnemyFactory(Protocol):
+    def create_soldier(self): ...
+    def create_monster(self): ...
+    def create_super_monster(self): ...
 
 class EasyLevelEnemyFactory:
 
