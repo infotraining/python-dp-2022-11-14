@@ -23,27 +23,22 @@ class Rectangle:
         print(f"Rectangle({self.width}, {self.height})")
 
 
-class Square(Rectangle):
+class Square:
     def __init__(self, size):
-        super().__init__(size, size)
+        self.__rect_impl = Rectangle(size, size)
 
     @property
-    def width(self):
-        return self._width
+    def size(self):
+        assert self.__rect_impl.width == self.__rect_impl.height
+        return self.__rect_impl.height
 
-    @width.setter
-    def width(self, w):
-        self._width = w
-        self._height = w
+    @size.setter
+    def size(self, w):
+        self.__rect_impl.width = w
+        self.__rect_impl.height = w
 
-    @property
-    def height(self):
-        return self._height
-
-    @height.setter
-    def height(self, h):
-        self._height = h
-        self._width = h
+    def draw(self):
+        self.__rect_impl.draw()
 
 
 def calc_area(rect: Rectangle):
@@ -51,9 +46,9 @@ def calc_area(rect: Rectangle):
 
 
 if __name__ == "__main__":
-    rect = Rectangle(100, 200)
+    rect = Square(100)
     rect.draw()
 
-    rect.width = 10
-    rect.height = 20
-    assert calc_area(rect) == 200
+    # rect.width = 10
+    # rect.height = 20
+    # assert calc_area(rect) == 200

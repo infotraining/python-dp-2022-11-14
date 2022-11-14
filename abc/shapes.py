@@ -1,6 +1,6 @@
 import abc
 from collections import namedtuple
-from typing import List
+from typing import List, Protocol, Union
 from dataclasses import dataclass
 
 
@@ -14,7 +14,22 @@ class Coord:
         self.y += dy
 
 
-class Shape:
+class Shape(abc.ABC):
+    @abc.abstractmethod
+    def move(self, dx, dy) -> None:
+        pass
+
+    @abc.abstractmethod
+    def draw(self) -> None:
+        pass
+
+    @property
+    @abc.abstractmethod
+    def coordinates(self) -> Coord:
+        pass
+
+
+class ShapeBase(Shape):
     """Refactor Shape class to ABC
     """
 
@@ -25,23 +40,24 @@ class Shape:
     def coordinates(self) -> Coord:
         return self.__coord
 
+    @abc.abstractmethod
     def move(self, dx, dy) -> None:
         self.__coord.translate(dx, dy)
 
-    def draw(self):
-        pass
 
-
-class Circle(Shape):
+class Circle(ShapeBase):
     def __init__(self, x, y, r):
         super().__init__(x, y)
         self.__radius = r
+
+    def move(self, dx, dy):
+        super().move(dx, dy)
 
     def draw(self) -> None:
         print(f'Circle at {self.coordinates} with radius {self.__radius}')
 
 
-class Rectangle(Shape):
+class Rectangle(ShapeBase):
     def __init__(self, x, y, w, h):
         super().__init__(x, y)
         self.__width = w
@@ -67,9 +83,44 @@ class Rectangle(Shape):
         print(
             f'Rectangle at {self.coordinates} with width={self.__width} & height={self.__height}')
 
+    def move(self, dx, dy):
+        super().move(dx, dy)
 
-def draw_shapes(shapes: List[Shape]):
-    shapes.draw()
+
+# def draw_shapes(shapes: List[Shape]):
+#     shapes.draw()
+
+@dataclass
+class SystemManager:
+    name: str
+
+    def run(self) -> None:
+        print(f"{self.name} is running...")
+
+
+class Printable(Protocol):
+    def print(self, msg: str) -> None: ...
+
+
+class UberDeviceManager(Protocol):
+    def add_device(self, device): ...
+    def get_system_manager(self) -> SystemManager: ...
+
+
+class MyUDM:
+    def add_device(self, device):
+        print(f"add device {device}")
+
+    def get_system_manager(self):
+        return SystemManager("System Manager")
+
+    def print(self, msg: str) -> None:
+        print(msg)
+
+
+def client(manager: Union[UberDeviceManager, Printable]):
+    manager.add_device("server")
+    sys_manager = manager.get_system_manager()
 
 
 if __name__ == "__main__":
@@ -81,5 +132,8 @@ if __name__ == "__main__":
     assert isinstance(c, Shape)
     assert issubclass(Circle, Shape)
 
-    r = Rectangle(10, 200, 500, 100)
+    r = Rectangle(10, 200, 500, 100)    
     r.draw()
+
+device_manager = MyUDM()
+client(device_manager)
