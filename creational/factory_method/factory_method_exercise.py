@@ -1,4 +1,5 @@
 from io import StringIO
+from typing import Dict, Union
 
 
 class Shape:
@@ -25,6 +26,27 @@ class Rectangle(Shape):
     def draw(self):
         print('Rectangle x={} y={} w={} h={}'.format(self.x, self.y, self.w, self.h))
 
+class Square(Rectangle):
+    def __init__(self, x, y, a):
+        super().__init__(x, y, a, a)
+
+    def draw(self):
+        print('Square x={} y={} w={} h={}'.format(self.x, self.y, self.w, self.h))
+
+
+shapes_factory: Dict[str, Union[Circle, Rectangle]] = {
+    "Square": lambda x, y, a: Rectangle(x, y, a, a),
+    "Rectangle": Rectangle,
+    "Circle": Circle
+}
+
+
+mapper = {
+    'Circle': Circle,
+    'Rectangle': Rectangle,
+    'Square': Square
+}
+
 
 class Drawing:
     def __init__(self, shapes):
@@ -42,21 +64,13 @@ class Drawing:
                 continue
             shape_name, *parameters = line.split()
             parameters = map(int, parameters)
-            if shape_name == 'Circle':
-                shape = Circle(*parameters)
-            elif shape_name == 'Rectangle':
-                shape = Rectangle(*parameters)
-            elif shape_name == 'Square':
-                x, y, a = parameters
-                shape = Rectangle(x, y, a, a)
-            else:
-                raise TypeError
-            shapes.append(shape)
+            try:
+                shape = mapper[shape_name](*parameters)
+                shapes.append(shape)
+            except KeyError:
+                print(f"No shape named '{shape_name}' found.")
         return cls(shapes)
 
-    def render(self):
-        for s in self._shapes:
-            s.draw()
 
 
 if __name__ == "__main__":
@@ -66,6 +80,7 @@ Circle 15 10 14
 Rectangle 30 30 100 150
 Circle 40 20 5
 Square 30 100 20
+Ziemniaczek 10 10 10 10
 '''
 
     graphics = Drawing.from_stream(StringIO(raw_shapes))
