@@ -33,7 +33,21 @@ def client(f):
     print(f(20, 21))
 
 def fib_sum(a, b):
+    print(f"Calculating fibonacci({a}) + fibonacci({b})")
+    return fibonacci(a) + fibonacci(b)
+
+@CacheFunction
+def fib_sum_cached(a, b):
+    print(f"Calculating fibonacci({a}) + fibonacci({b})")
     return fibonacci(a) + fibonacci(b)
 
 if __name__ == "__main__":
+    client(fib_sum)
+
+    print('-' * 80)
+
     client(CacheFunction(fib_sum))
+
+    print('-' * 80)
+
+    client(fib_sum_cached)

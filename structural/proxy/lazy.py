@@ -1,4 +1,6 @@
 
+import time
+
 class LazyProperty:
     def __init__(self, method):
         self.method = method
@@ -22,8 +24,13 @@ class Image:
 
     @LazyProperty
     def bitmap(self):
-        print('initializing self._bitmap which is: {}'.format(self._bitmap))
-        self._bitmap = [c for c in "Bitmap({})".format(self._path)]
+        print(f'Initializing self._bitmap ', end="")
+        for _ in range(10):
+            time.sleep(1)
+            print('.', end="", flush=True)
+        
+        self._bitmap = [c for c in f"Bitmap({self._path})"]
+        print(f'\nBitmap loaded: {self._bitmap} ')
         return self._bitmap
 
 
@@ -32,13 +39,14 @@ def main():
 
     img = Image(10, 20, "test.png")
 
-    print("Image coordinates: {}".format(img.coordinates))
-    print("Image bitmap: {}".format(img.bitmap))
+    print(f"Image coordinates: {img.coordinates}")
+    print(f"Image bitmap: {img.bitmap}")
 
     img.coordinates = (40, 20)
+    print('-' * 40)
 
-    print("Image coordinates: {}".format(img.coordinates))
-    print("Image bitmap: {}".format(img.bitmap))
+    print(f"Image coordinates: {img.coordinates}")
+    print(f"Image bitmap: {img.bitmap}")
 
 
 if __name__ == '__main__':

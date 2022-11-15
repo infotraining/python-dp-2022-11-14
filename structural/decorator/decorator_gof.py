@@ -41,12 +41,12 @@ class ConcreteDecoratorB(Decorator):
     def __init__(self, component):
         super().__init__(component)
 
-    def additional_behaviour(self):
-        return "additional behaviour"
+    def additional_behavior(self):
+        return "additional behavior"
 
     def operation(self):
         Decorator.operation(self)
-        print(" + is decorated with {}", self.additional_behaviour())
+        print(f" + is decorated with {self.additional_behavior()}", )
 
 
 class Client:

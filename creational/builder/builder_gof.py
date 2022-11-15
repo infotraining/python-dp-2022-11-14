@@ -1,4 +1,5 @@
 from collections import namedtuple
+from typing import Protocol
 
 
 class Car:
@@ -13,6 +14,15 @@ class Car:
     def __str__(self):
         return "Car(engine={}, gearbox={}, airbags_count={}, aircondition={}, wheels={})" \
             .format(self.engine, self.gearbox, self.airbags_count, self.air_condition if self.air_condition else "None", self.wheels)
+
+
+class CarBuilder(Protocol):
+    def build_engine(self): ...
+    def build_gearbox(self): ...
+    def build_airbags(self): ...
+    def build_air_condition(self): ...
+    def build_wheel(self): ...
+    def get_car(self): ...
 
 
 class EconomyCarBuilder:
@@ -65,10 +75,10 @@ class PremiumCarBuilder:
 
 class Director:
 
-    def __init__(self, builder):
+    def __init__(self, builder: CarBuilder):
         self.builder = builder
 
-    def set_builder(self, new_builder):
+    def set_builder(self, new_builder: CarBuilder):
         self.builder = new_builder
 
     def construct(self):

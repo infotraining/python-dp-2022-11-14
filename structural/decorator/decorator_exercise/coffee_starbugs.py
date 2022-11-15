@@ -3,15 +3,15 @@ import abc
 
 class Coffee(abc.ABC):
     @abc.abstractproperty
-    def price(self):
+    def price(self) -> float:  # type:ignore
         """returns price of coffee"""
 
     @abc.abstractproperty
-    def description(self):
+    def description(self) -> str:  # type:ignore
         """returns description of coffee"""
 
     @abc.abstractmethod
-    def prepare(self):
+    def prepare(self) -> None:
         """prepares a coffee"""
 
 
@@ -52,6 +52,53 @@ class Latte(BaseCoffee):
     def prepare(self):
         print("Making a perfect latte")
 
+#######################################
+# Decorators
+
+class CoffeeDecorator(Coffee):
+    def __init__(self, coffee: Coffee, price, description):
+        self.__coffee = coffee
+        self.__price = price
+        self.__description = description
+
+    @property
+    def price(self):
+        return self.__price + self.__coffee.price
+
+    @property
+    def description(self):
+        return f"{self.__coffee.description} + {self.__description}"
+
+    def prepare(self) -> None:
+        return self.__coffee.prepare()
+
+
+class Whipped(CoffeeDecorator):
+    def __init__(self, component: Coffee, price=2.5, description="Whipped Cream"):
+        super().__init__(component, price, description)
+
+    def prepare(self):
+        super().prepare()
+        print("Adding a whipped cream")
+
+
+class Whisky(CoffeeDecorator):
+    def __init__(self, component: Coffee, price=10.0, description="Whisky"):
+        super().__init__(component, price, description)
+
+    def prepare(self):
+        super().prepare()
+        print("Pouring a 50cl of whisky")
+
+
+class ExtraEspresso(CoffeeDecorator):
+    def __init__(self, component: Coffee, price=4.0, description="Extra Espresso"):
+        super().__init__(component, price, description)
+
+    def prepare(self):
+        super().prepare()
+        print("Making a perfect espresso: 8g of coffee, 96 Celsius, 16 bar")
+
 
 ######################################
 # Prices of condiments:
@@ -60,18 +107,16 @@ class Latte(BaseCoffee):
 #  - ExtraEspresso: 4.0
 ######################################
 
-
 if __name__ == "__main__":
-    pass
 
-    # coffee = Whisky(ExtraEspresso(Cappuccino()))
-    # print(f"Price: {coffee.price}$")
-    # print(f"Description: {coffee.description}")
-    # coffee.prepare()
+    coffee = Whisky(ExtraEspresso(Cappuccino()))
+    print(f"Price: {coffee.price}$")
+    print(f"Description: {coffee.description}")
+    coffee.prepare()
 
-    # print('-' * 60)
+    print('-' * 60)
 
-    # coffee = Whisky(Whisky(Whipped(Whisky(Espresso()))))
-    # print(f"Price: {coffee.price}$")
-    # print(f"Description: {coffee.description}")
-    # coffee.prepare()
+    coffee = Whisky(Whisky(Whipped(Whisky(Espresso()))))
+    print(f"Price: {coffee.price}$")
+    print(f"Description: {coffee.description}")
+    coffee.prepare()

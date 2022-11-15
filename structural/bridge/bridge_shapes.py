@@ -101,7 +101,7 @@ if __name__ == "__main__":
     #drawing = ConsoleDrawing()
 
     shapes = [Circle(drawing, 50, 50, 50), Rectangle(drawing, 40, 20, 100, 200),
-              Polygon(drawing, [(100, 200), (200, 300), (600, 600)])]
+              Polygon(drawing, [(100, 200), (50, 300), (100, 250)])]
 
     for s in shapes:
         s.draw()

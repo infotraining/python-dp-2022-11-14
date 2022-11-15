@@ -3,7 +3,6 @@ from collections import OrderedDict
 
 
 class Book:
-
     def __init__(self, name, authors, price, **rest):
         '''Examples of rest: publisher, length, tags, publication date'''
 
@@ -12,7 +11,7 @@ class Book:
         self.price = price
         self.__dict__.update(rest)
 
-    def __str__(self):        
+    def __str__(self):
         my_list = []
         ordered = OrderedDict(sorted(self.__dict__.items()))
 
@@ -28,8 +27,11 @@ class PrototypeFactory:
     def __init__(self):
         self.objects = dict()
 
-    def register(self, identifier, obj):
-        self.objects[identifier] = copy.deepcopy(obj)
+    def register(self, identifier, obj, frozen = True):
+        if frozen:
+            self.objects[identifier] = copy.deepcopy(obj)
+        else:
+            self.objects[identifier] = obj
 
     def unregister(self, identifier):
         del self.objects[identifier]
@@ -39,28 +41,28 @@ class PrototypeFactory:
 
         if not found:
             raise ValueError('Incorrect object identifier: {}'.format(identifier))
-        
+
         obj = copy.deepcopy(found)
         obj.__dict__.update(attr)
         return obj
 
 
 def main():
-    book_c = Book('The C Programming Langauage', ('Brian W. Kernighan', 'Dennis M. Ritchie'), price=118, 
-              publisher='Prentice Hall', length=228, publication_date='1978-02-22', 
+    book_c = Book('The C Programming Langauage', ('Brian W. Kernighan', 'Dennis M. Ritchie'), price=118,
+              publisher='Prentice Hall', length=228, publication_date='1978-02-22',
               tags=('C', 'programming', 'algorithms', 'data', 'structures'))
 
-    prototype = PrototypeFactory()
+    prototype_factory = PrototypeFactory()
 
     book_id = 'k&r first'
-    prototype.register(book_id, book_c) 
+    prototype_factory.register(book_id, book_c)
 
-    cloned_book_c = prototype.clone(book_id)
+    cloned_book_c = prototype_factory.clone(book_id, **{'publisher': 'PWN'})
 
     print("ID b1 : {} != ID b2 : {}".format(id(book_c), id(cloned_book_c)))
 
     print("=" * 60)
-    
+
     for b in (book_c, cloned_book_c):
         print(b)
 

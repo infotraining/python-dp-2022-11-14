@@ -1,8 +1,9 @@
 import random
 from typing import Protocol
 
-#-- LEVEL 1
-
+#########################
+# LEVEL 1
+#########################
 
 class SillySoldier():
     def action(self):
@@ -19,7 +20,9 @@ class SillySuperMonster():
         print("SillySuperMonster in action")
 
 
-#-- LEVEL 2
+#########################
+#  LEVEL 2
+#########################
 
 class BadSoldier():
     def action(self):
@@ -40,6 +43,7 @@ class EnemyFactory(Protocol):
     def create_soldier(self): ...
     def create_monster(self): ...
     def create_super_monster(self): ...
+
 
 class EasyLevelEnemyFactory:
 
@@ -89,7 +93,6 @@ class Game:
             else:
                 enemies.append(self.enemy_factory.create_super_monster())
 
-
         for enemy in enemies:
             enemy.action()
 
@@ -104,4 +107,3 @@ if __name__ == '__main__':
 
     game.set_level(2)
     game.play()
-
