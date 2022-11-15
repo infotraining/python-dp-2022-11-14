@@ -28,7 +28,7 @@ class TreeFlyweight:
 
         return "***" + path + "***"
 
-    def render(self, coord):
+    def render(self, coord: Coord):
         print(f'Rendering {self.__bmp}#{id(self)} at ({coord.x}, {coord.y})')
 
 
