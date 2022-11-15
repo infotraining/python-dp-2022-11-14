@@ -23,11 +23,6 @@ class Shape(abc.ABC):
     def draw(self) -> None:
         pass
 
-    @property
-    @abc.abstractmethod
-    def coordinates(self) -> Coord:
-        pass
-
 
 class ShapeBase(Shape):
     """Refactor Shape class to ABC
@@ -87,40 +82,26 @@ class Rectangle(ShapeBase):
         super().move(dx, dy)
 
 
-# def draw_shapes(shapes: List[Shape]):
-#     shapes.draw()
+class ShapeGroup(Shape):
+    def __init__(self):
+        self._shapes: List[Shape] = []
 
-@dataclass
-class SystemManager:
-    name: str
+    def move(self, dx, dy):
+        [s.move(dx, dy) for s in self._shapes]
 
-    def run(self) -> None:
-        print(f"{self.name} is running...")
+    def draw(self):
+        for s in self._shapes:
+            s.draw()
 
+    def add(self, shp: Shape):
+        self._shapes.append(shp)
 
-class Printable(Protocol):
-    def print(self, msg: str) -> None: ...
+    def remove(self, shp: Shape):
+        self._shapes.remove(shp)
 
-
-class UberDeviceManager(Protocol):
-    def add_device(self, device): ...
-    def get_system_manager(self) -> SystemManager: ...
-
-
-class MyUDM:
-    def add_device(self, device):
-        print(f"add device {device}")
-
-    def get_system_manager(self):
-        return SystemManager("System Manager")
-
-    def print(self, msg: str) -> None:
-        print(msg)
-
-
-def client(manager: Union[UberDeviceManager, Printable]):
-    manager.add_device("server")
-    sys_manager = manager.get_system_manager()
+    def __iter__(self):
+        for s in self._shapes:
+            yield s
 
 
 if __name__ == "__main__":
@@ -135,5 +116,19 @@ if __name__ == "__main__":
     r = Rectangle(10, 200, 500, 100)    
     r.draw()
 
-device_manager = MyUDM()
-client(device_manager)
+    shapes = ShapeGroup()
+    shapes.add(c)
+    shapes.add(r)
+    shapes.add(Rectangle(100, 200, 200, 500))
+
+    print('*' * 60)
+
+    shapes.draw()
+
+    print('*' * 60)
+
+    shapes.move(30, 70)
+    shapes.draw()
+
+    for s in shapes:
+        print(s)

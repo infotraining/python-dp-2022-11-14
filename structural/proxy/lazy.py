@@ -16,6 +16,23 @@ class LazyProperty:
         return value
 
 
+class ImageNaiveProxy:
+    def __init__(self, x, y, path):
+        self.coordinates = (x, y)
+        self._path = path
+        self._bitmap = None
+    
+    def bitmap(self):
+        if not self._bitmap:
+            print(f'Initializing self._bitmap ', end="")
+            for _ in range(10):
+                time.sleep(1)
+                print('.', end="", flush=True)
+
+            self._bitmap = [c for c in f"Bitmap({self._path})"]
+            print(f'\nBitmap loaded: {self._bitmap} ')
+        return self._bitmap
+
 class Image:
     def __init__(self, x, y, path):
         self.coordinates = (x, y)
