@@ -54,6 +54,12 @@ class Latte(BaseCoffee):
 
 #######################################
 # Decorators
+######################################
+# Prices of condiments:
+#  - Whipped Cream: 2.5
+#  - Whisky: 10.0
+#  - ExtraEspresso: 4.0
+######################################
 
 class CoffeeDecorator(Coffee):
     def __init__(self, coffee: Coffee, price, description):
@@ -97,15 +103,35 @@ class ExtraEspresso(CoffeeDecorator):
 
     def prepare(self):
         super().prepare()
-        print("Making a perfect espresso: 8g of coffee, 96 Celsius, 16 bar")
+        Espresso().prepare()
 
 
-######################################
-# Prices of condiments:
-#  - Whipped Cream: 2.5
-#  - Whisky: 10.0
-#  - ExtraEspresso: 4.0
-######################################
+class CoffeeBuilder:
+    def __init__(self):
+        self.__coffee = None
+
+    def create_base(self, base):
+        if not issubclass(base, BaseCoffee):
+            raise TypeError("base must be derived from BaseCoffee")
+
+        self.__coffee = base()
+        return self
+
+    def add(self, *condiments):
+        
+        assert self.__coffee
+
+        for condiment in condiments:
+            if not issubclass(condiment, CoffeeDecorator):
+                raise TypeError("the condiment must be derived from Derived")
+
+            self.__coffee = condiment(self.__coffee)
+
+        return self
+
+    def get_coffee(self):
+        return self.__coffee
+
 
 if __name__ == "__main__":
 
@@ -120,3 +146,17 @@ if __name__ == "__main__":
     print(f"Price: {coffee.price}$")
     print(f"Description: {coffee.description}")
     coffee.prepare()
+
+    print('-' * 60)
+
+    coffee = CoffeeBuilder() \
+        .create_base(Espresso) \
+        .add(Whisky, ExtraEspresso) \
+        .add(Whipped) \
+        .get_coffee()
+
+    print(f"Price: {coffee.price}$")
+    print(f"Description: {coffee.description}")
+    coffee.prepare()
+
+
