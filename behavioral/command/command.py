@@ -14,7 +14,7 @@ class Command(abc.ABC):
         pass
 
 
-class UndoableCommand(Command):
+class RetrievableCommand(Command):
     def __init__(self, history):
         self.history = history
 
@@ -43,7 +43,7 @@ class LsCommand(Command):
         print('Content of dir:', ' '.join(filenames))
 
 
-class TouchCommand(UndoableCommand):
+class TouchCommand(RetrievableCommand):
     """Concrete command that emulates touch unix command behavior"""
 
     def __init__(self, history, filename):
@@ -62,7 +62,7 @@ class TouchCommand(UndoableCommand):
         os.remove(self.filename)
 
 
-class RmCommand(UndoableCommand):
+class RmCommand(RetrievableCommand):
     """Concrete command that emulates rm unix command behavior"""
 
     def __init__(self, history, filename):
