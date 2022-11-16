@@ -10,39 +10,52 @@ class Handler(abc.ABC):
     def successor(self, successor):
         self._successor = successor
 
-    @abc.abstractmethod
     def handle(self, request):
+        if self.can_process(request):
+            self.do_handle(request)
+        elif self._successor:
+            self._successor.handle(request)
+
+    @abc.abstractmethod
+    def can_process(self, request):
+        pass
+
+    @abc.abstractmethod
+    def do_handle(self, request):
         pass
 
 
-class ConcreteHandler1(Handler):
-    def handle(self, request):
-        if 0 < request <= 10:
-            print('request {} handled in handler 1'.format(request))
-        elif self._successor:
-            self._successor.handle(request)
+class ConcreteHandler1(Handler):    
+    def can_process(self, request):
+        return 0 < request <= 10
+
+    def do_handle(self, request):
+        print('request {} handled in handler 1'.format(request))
 
 
 class ConcreteHandler2(Handler):
-    def handle(self, request):
-        if 10 < request <= 20:
-            print('request {} handled in handler 2'.format(request))
-        elif self._successor:
-            self._successor.handle(request)
+    def can_process(self, request):
+        return 10 < request <= 20
+
+    def do_handle(self, request):
+        print('request {} handled in handler 2'.format(request))
 
 
 class ConcreteHandler3(Handler):
-    def handle(self, request):
-        if 20 < request <= 30:
-            print('request {} handled in handler 3'.format(request))
-        elif self._successor:
-            self._successor.handle(request)
+    def can_process(self, request):
+        return 20 < request <= 30
+
+    def do_handle(self, request):
+        print('request {} handled in handler 3'.format(request))
 
 
 class DefaultHandler(Handler):
-    def handle(self, request):
-        print('end of chain, no handler for {}'.format(request))
+    def can_process(self, request):
+        return True
 
+    def do_handle(self, request):
+        print('end of chain, no handler for {}'.format(request))
+      
 
 class Client:
     def __init__(self):

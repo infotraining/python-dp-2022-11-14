@@ -2,7 +2,6 @@ import abc
 
 
 class Observer(abc.ABC):
-
     @abc.abstractmethod
     def __call__(self, sender, event_args):
         pass

@@ -70,3 +70,5 @@ class BankAccount: # Context
     @property
     def state_description(self):
         return self._state.description
+
+# https://breadcrumbscollector.tech/meet-python-mockito-and-leave-built-in-mock-patch-behind/
