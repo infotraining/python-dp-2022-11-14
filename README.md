@@ -3,3 +3,7 @@
 * Prezentacja - https://slides.com/d/s7oGmOo/live
 * Prezentacja offline - https://infotraining.bitbucket.io/python-dp/slides/
 * Shared editor - https://codeshare.io/OdqvWj
+
+## Ankieta
+
+* https://forms.gle/vgbPZm8USZbyhsWTA
