@@ -24,7 +24,7 @@ with such.A("Turnstile class") as it:
 
     with it.having("a locked state"):
 
-        @it.has_test_setup
+        @it.has_test_setup #Arrange
         def setup():
             it.mq_turnstile = MockTurnstile()
             it.turnstile_fsm = TurnstileFSM(it.mq_turnstile)
@@ -33,9 +33,9 @@ with such.A("Turnstile class") as it:
 
             @it.has_test_setup
             def setup():
-                it.turnstile_fsm.coin()
+                it.turnstile_fsm.coin() # Act
 
-            @it.should("unlock a gate")
+            @it.should("unlock a gate") # Assert
             def test(case):
                 assert it.mq_turnstile.actions[-1] == 'U'
 
