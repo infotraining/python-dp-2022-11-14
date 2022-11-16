@@ -93,7 +93,7 @@ class PolsatNewsParser(AbstractNewsParser):
 
 class NewsReader:
 
-    def top_news(self, head_title, news_provider):
+    def top_news(self, head_title, news_provider: AbstractNewsParser):
         print(head_title)
         news_provider.print_top_news()
 
@@ -102,7 +102,7 @@ if __name__ == '__main__':
 
     news_reader = NewsReader()
 
-    bing = BingParser()
+    bing = YahooParser()
     news_reader.top_news('Bing: \n', bing)
 
     print('#'*40)
